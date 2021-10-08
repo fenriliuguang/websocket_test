@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>展示内容</div>
+    <div id="test"></div>
+    <input id="p" placeholder="输入内容">
+    <script>
+        var ws = new WebSocket('ws://localhost:8800/room')
+        var d = new Date
+        var msg = {
+            ID: "time" + d.getTime(),
+            Content: "",
+            SentAt: d.getTime(),
+            Type: 3
+        }
+
+        ws.onopen = function() {
+            ws.send(JSON.stringify(msg))
+        }
+
+        function send() {
+            msg.Type = 1
+            var text = document.getElementById("p").value
+            console.log(text)
+            msg.Content = text
+            msg.SentAt = d.getTime()
+            ws.send(JSON.stringify(msg))
+        }
+
+        ws.onmessage = function(data) {
+            document.getElementById("test").innerHTML = data
+        }
+    </script>
+    <input type="button" onclick="send()">
+</body>
+
+
+<script>
+</script>
+
+</html>
